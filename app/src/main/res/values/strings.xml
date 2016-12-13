@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Eval</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="candidate_name">Candidate Name</string>
+    <string name="job_title">Job Title</string>
+    <string name="interviewer_name">Interviewer Name</string>
+    <string name="interview_date">Interview Date</string>
+
+    <!-- Competency -->
+    <string name="communication">Communication</string>
+    <string name="problem_solving">Problem Solving</string>
+    <string name="conflict_resolution">Conflict Resolution</string>
+    <string name="teamwork">Teamwork</string>
+    <string name="work_experience">Work Experience</string>
+    <string name="educational_background">Educational Background</string>
+    <string name="leadership">Leadership</string>
+    <string name="comments">Comments</string>
+
+
+    <string name="submit">Submit</string>
+    <string name="sync">Sync</string>
+    <string name="evaluation_record_creation_error">Could not create evaluation record</string>
+    <string name="evaluation_record_creation_success">Record successfully created</string>
+    <string name="validation_error">Please correct error(s) and try again</string>
+    <string name="sync_success">Records successfully synced</string>
+    <string name="sync_failed">Error occured while syncing</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Log In</string>
+    <string name="email">Email</string>
+    <string name="login_credentials_error">Invalid username/password</string>
+
+
+    <!-- Ratings -->
+    <string name="option1">1</string>
+    <string name="option2">2</string>
+    <string name="option3">3</string>
+    <string name="option4">4</string>
+    <string name="option5">5</string>
+
+
+    <!-- Competencies -->
+    <string-array name="competencies">
+        <item>Communication</item>
+        <item>Problem Solving</item>
+        <item>Conflict Resolution</item>
+        <item>Team Work</item>
+        <item>Work Experience</item>
+        <item>Educational Background</item>
+        <item>Leadership</item>
+    </string-array>
+
+</resources>

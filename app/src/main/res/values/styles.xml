@@ -1,0 +1,42 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/interviewColorPrimary</item>
+        <item name="colorPrimaryDark">@color/interviewColorPrimaryDark</item>
+        <item name="colorAccent">@color/interviewColorPrimary</item>
+    </style>
+
+    <style name="LoginTheme" parent = "Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/interviewColorPrimary</item>
+    </style>
+
+    <style name="customEditText">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="customText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#141823</item>
+    </style>
+
+    <style name='LoginEditText'>
+        <item name='android:background'>@drawable/login_edittext_border</item>
+        <item name='android:layout_marginBottom'>20dp</item>
+        <item name='android:paddingLeft'>5dp</item>
+        <item name='android:paddingBottom'>5dp</item>
+        <item name='android:textColorHint'>@color/colorHint</item>
+        <item name='android:textColor'>#FFFFFF</item>
+    </style>
+
+    <style name='LoginButton'>
+        <item name='android:background'>@drawable/login_button</item>
+        <item name='android:textColor'>@color/interviewColorPrimaryDark</item>
+        <item name='android:textSize'>15sp</item>
+        <item name='android:layout_marginTop'>10dp</item>
+    </style>
+
+</resources>
