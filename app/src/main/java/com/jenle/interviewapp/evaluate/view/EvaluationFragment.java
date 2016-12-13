@@ -45,6 +45,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String TAG = "EVALUATIONFRAGMENT";
     private Context context;
+    private EvaluateContract.Presenter evaluationPresenter;
 
 
     public EvaluationFragment() {
@@ -60,7 +61,6 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = this.getContext();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_evaluation, container, false);
@@ -100,6 +100,15 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        
+        context = this.getContext();
+        evaluationPresenter = new EvaluationPresenter(this, context);
+
     }
 
     /**
@@ -224,7 +233,6 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             Evaluation evaluation = new EvaluationServiceImpl().create(candidateName, jobTitle,
                     interviewerName, interviewDate, ratings, comments);
 
-            EvaluateContract.Presenter evaluationPresenter = new EvaluationPresenter(this, context);
             evaluationPresenter.addEvaluationRecord(evaluation);
 
             return;

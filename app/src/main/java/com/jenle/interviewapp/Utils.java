@@ -1,6 +1,7 @@
 package com.jenle.interviewapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.nfc.Tag;
 import android.util.Log;
@@ -119,5 +120,25 @@ public class Utils {
         return new JSONArray(records);
     }
 
+    /**
+     * Saves a string value in SharedPreference
+     * @param context
+     * @param key The key of the value to be saved
+     * @param value The value to be saved
+     */
+    public void saveStringInPreference(Context context, String key, String value){
+        String preferenceFileKey = context.getString(R.string.preference_file_key);
+        SharedPreferences sharedPrefs = context.getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(key, value);
+        editor.commit();
+
+    }
+
+    public String getStringFromPreference(Context context, String key){
+        String preferenceFileKey = context.getString(R.string.preference_file_key);
+        SharedPreferences sharedPrefs = context.getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+        return sharedPrefs.getString(key, null);
+    }
 
 }

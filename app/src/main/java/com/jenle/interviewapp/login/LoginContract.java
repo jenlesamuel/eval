@@ -12,6 +12,8 @@ public interface LoginContract {
     interface View {
         public void showProgress();
         public void closeProgress();
+        public void showMessage(Context context, String message);
+        public void redirectToEvaluation();
     }
 
     interface Presenter {
