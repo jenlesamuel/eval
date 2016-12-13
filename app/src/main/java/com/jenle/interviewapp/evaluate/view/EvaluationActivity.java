@@ -17,6 +17,7 @@ import com.jenle.interviewapp.InterviewAppException;
 import com.jenle.interviewapp.R;
 import com.jenle.interviewapp.Utils;
 import com.jenle.interviewapp.evaluate.model.EvaluationDAO;
+import com.jenle.interviewapp.login.view.LoginActivity;
 import com.jenle.interviewapp.sync.EvaluationNetworkService;
 
 import java.util.ArrayList;
@@ -47,6 +48,10 @@ public class EvaluationActivity extends AppCompatActivity {
                 sync();
                 return true;
 
+            case R.id.logout:
+                logout();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -57,6 +62,13 @@ public class EvaluationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EvaluationNetworkService.class);
         intent.putExtra(Config.SOURCE, Config.BULK_SYNC);
         startService(intent);
+    }
+
+    public void logout() {
+
+        new Utils().removeStringFromPreference(getApplicationContext(), getResources().getString(R.string.token));
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
 }

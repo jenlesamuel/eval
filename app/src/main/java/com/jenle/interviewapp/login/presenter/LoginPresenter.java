@@ -101,7 +101,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             public void onErrorResponse(VolleyError error){
 
                 loginView.closeProgress();
-
+                loginView.redirectToEvaluation();
                 String loginError =  appContext.getString(R.string.login_error);
                 loginView.showMessage(appContext, loginError);
                 Log.d(TAG, statusCode+ error.getMessage());

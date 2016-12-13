@@ -10,6 +10,7 @@
 
     <style name="LoginTheme" parent = "Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/interviewColorPrimary</item>
+        <item name="colorPrimaryDark">@color/interviewColorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 

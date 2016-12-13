@@ -6,4 +6,9 @@
         android:title="@string/sync"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout"
+        app:showAsAction="never" />
+
 </menu>

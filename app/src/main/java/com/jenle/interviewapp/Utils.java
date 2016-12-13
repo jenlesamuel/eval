@@ -138,7 +138,16 @@ public class Utils {
     public String getStringFromPreference(Context context, String key){
         String preferenceFileKey = context.getString(R.string.preference_file_key);
         SharedPreferences sharedPrefs = context.getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+
         return sharedPrefs.getString(key, null);
+    }
+
+    public void removeStringFromPreference(Context context, String key){
+        String preferenceFileKey = context.getString(R.string.preference_file_key);
+        SharedPreferences sharedPrefs = context.getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.remove(key);
+        editor.commit();
     }
 
 }
