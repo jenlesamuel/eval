@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.InterviewAppException;
 import com.jenle.interviewapp.R;
 import com.jenle.interviewapp.Utils;
@@ -40,12 +44,17 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
 
     private LinearLayout contentView;
     private EditText candidateView, jobView, interviewerView, dateView, commentsView;
-    private TextView communicationView;
     private Button submit;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String TAG = "EVALUATIONFRAGMENT";
     private Context appContext;
     private EvaluateContract.Presenter evaluationPresenter;
+    private AppCompatActivity parentActivity;
+    private Utils utils;
+    private String candidateLabel;
+    private String interviewerNameLabel;
+    private String jobLabel;
+    private String commentsLabel;
 
 
     public EvaluationFragment() {
@@ -65,22 +74,66 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_evaluation, container, false);
 
+        utils = new Utils();
+        parentActivity = (AppCompatActivity) getActivity();
+        appContext = parentActivity.getApplicationContext();
+        evaluationPresenter = new EvaluationPresenter(this, appContext);
+
         contentView = (LinearLayout) view.findViewById(R.id.container);
+
         candidateView = (EditText) view.findViewById(R.id.candidate_name);
+        candidateLabel = utils.getStringFromResource(appContext, R.string.candidate_name);
+        candidateView.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+            @Override
+            public void afterTextChanged(Editable s){
+                utils.isValidName(candidateView, candidateLabel, s.toString());
+            }
+        });
+
         jobView = (EditText) view.findViewById(R.id.job);
+        jobLabel =  utils.getStringFromResource(appContext, R.string.job_title);
+        jobView.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+            @Override
+            public void afterTextChanged(Editable s){
+                utils.isValidNonEmpty(jobView, jobLabel, s.toString());
+            }
+        });
+
+
         interviewerView = (EditText) view.findViewById(R.id.interviewer_name);
-        dateView = (EditText) view.findViewById(R.id.date);
+        interviewerNameLabel = utils.getStringFromResource(appContext, R.string.interviewer_name);
+        interviewerView.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+            @Override
+            public void afterTextChanged(Editable s){
+                utils.isValidName(interviewerView, interviewerNameLabel, s.toString());
+            }
+        });
+
         commentsView = (EditText)view.findViewById(R.id.comments);
+        commentsLabel =  utils.getStringFromResource(appContext, R.string.comments);
+        commentsView.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+            @Override
+            public void afterTextChanged(Editable s){
+                utils.isValidNonEmpty(commentsView, commentsLabel, s.toString());
+            }
+        });
 
-        // Set onClick listeners for all radio buttons
-        RadioButtonClickedListener radioListener = new RadioButtonClickedListener();
-        (view.findViewById(R.id.option1)).setOnClickListener(radioListener);
-        (view.findViewById(R.id.option2)).setOnClickListener(radioListener);
-        (view.findViewById(R.id.option3)).setOnClickListener(radioListener);
-        (view.findViewById(R.id.option4)).setOnClickListener(radioListener);
-        (view.findViewById(R.id.option5)).setOnClickListener(radioListener);
-
-        communicationView = (TextView)view.findViewById(R.id.communication);
 
         dateView = (EditText)view.findViewById(R.id.date);
         dateView.setFocusable(false);
@@ -105,9 +158,6 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        
-        appContext = this.getActivity().getApplicationContext();
-        evaluationPresenter = new EvaluationPresenter(this, appContext);
 
     }
 
@@ -122,6 +172,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
 
     public void setDate(String date){
         dateView.setText(date);
+        dateView.setError(null);
     }
 
     /**
@@ -151,6 +202,12 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         return;
     }
 
+    @Override
+    public void recreate(){
+        parentActivity.getIntent().putExtra(Config.RESTORE_STATE, false); // Set to make parent activity not repopulate views when recreating
+        getActivity().recreate();
+    }
+
 
     /**
      * Handler evaluation submission
@@ -161,22 +218,18 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         Utils utils = new Utils();
 
         String candidateName = candidateView.getText().toString();
-        String candidateLabel = utils.getStringFromResource(appContext, R.string.candidate_name);
         if (!utils.isValidName(candidateView, candidateLabel, candidateName)) valid = false;
 
         String jobTitle = jobView.getText().toString();
-        String jobLabel =  utils.getStringFromResource(appContext, R.string.job_title);
         if (!utils.isValidNonEmpty(jobView, jobLabel, jobTitle)) valid = false;
 
         String interviewerName = interviewerView.getText().toString();
-        String interviewerNameLabel = utils.getStringFromResource(appContext, R.string.interviewer_name);
         if (!utils.isValidName(interviewerView, interviewerNameLabel, interviewerName)) valid = false;
 
         String interviewDate = dateView.getText().toString();
         if (!utils.isValidDate(dateView, interviewDate)) valid = false;
 
         String comments = commentsView.getText().toString();
-        String commentsLabel =  utils.getStringFromResource(appContext, R.string.comments);
         if (!utils.isValidNonEmpty(commentsView, commentsLabel, comments)) valid = false;
 
 
@@ -192,7 +245,12 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
 
             View view = contentView.getChildAt(i);
             if (view instanceof RadioGroup) {
+
                 RadioGroup radioGroup = (RadioGroup) view;
+                RadioButtonClickedListener radioListener = new RadioButtonClickedListener();
+
+                addListeners(radioGroup, radioListener); // Add click listener to each radio button during iteration.
+
                 int checkedId = radioGroup.getCheckedRadioButtonId();
 
                 switch(checkedId){
@@ -259,6 +317,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     class RadioButtonClickedListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
+
             boolean checked = ((RadioButton)view).isChecked();
             Log.d(TAG, "clicked");
             if (checked) {
@@ -266,6 +325,16 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
                 RadioGroup radioGroup = (RadioGroup)view.getParent();
                 showRadioError(false, radioGroup);
             }
+
         }
+    }
+
+    public void addListeners(RadioGroup radioGroup, View.OnClickListener listener){
+        int count =  radioGroup.getChildCount();
+
+        for (int i=0; i<count; i++){
+            radioGroup.getChildAt(i).setOnClickListener(listener);
+        }
+
     }
 }

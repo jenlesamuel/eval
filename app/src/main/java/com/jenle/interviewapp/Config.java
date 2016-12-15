@@ -31,4 +31,5 @@ public final class Config {
     public static final String KEY_PASSWORD = "password";
     public static final int HTTP_200_OK = 200;
     public static final int HTTP_400_BAD_REQUEST = 400; // status code returned by remote API if login credentials is invalid
+    public static final String RESTORE_STATE = "restore";
 }

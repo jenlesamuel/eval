@@ -61,7 +61,7 @@ import com.jenle.interviewapp.evaluate.EvaluateContract;
         String evaluationSuccess = new Utils().getEvaluationCreationSuccess(appContext);
         evaluateView.closeProgressDialog();
         evaluateView.showMessage(evaluationSuccess);
-
+        evaluateView.recreate();
         //Save evaluation to remote server
        /* Intent intent = new Intent(context, EvaluationNetworkService.class);
         intent.putExtra(Config.ID, pk);

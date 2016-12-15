@@ -16,6 +16,7 @@ public interface EvaluateContract {
         void showProgressDialog();
         void closeProgressDialog();
         void showMessage(String message);
+        void recreate();
     }
 
     interface Presenter {
