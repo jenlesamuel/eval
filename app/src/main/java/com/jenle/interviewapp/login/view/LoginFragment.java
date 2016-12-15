@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,21 +14,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.R;
 import com.jenle.interviewapp.Utils;
 import com.jenle.interviewapp.evaluate.view.EvaluationActivity;
 import com.jenle.interviewapp.login.LoginContract;
 import com.jenle.interviewapp.login.presenter.LoginPresenter;
-import com.jenle.interviewapp.sync.QueueSingleton;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.

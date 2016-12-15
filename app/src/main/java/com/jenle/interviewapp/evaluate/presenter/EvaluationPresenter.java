@@ -18,11 +18,11 @@ import com.jenle.interviewapp.evaluate.model.EvaluationTask;
 public class EvaluationPresenter implements EvaluateContract.Presenter{
 
     private EvaluateContract.View evaluateView;
-    private Context context;
+    private Context appContext;
 
-    public EvaluationPresenter(EvaluateContract.View evaluateView, Context context){
+    public EvaluationPresenter(EvaluateContract.View evaluateView, Context appContext){
         this.evaluateView = evaluateView;
-        this.context = context;
+        this.appContext = appContext;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class EvaluationPresenter implements EvaluateContract.Presenter{
      */
     public void addEvaluationRecord(Evaluation evaluation) {
 
-        EvaluationTask evaluationTask = new EvaluationTask(evaluateView, context);
+        EvaluationTask evaluationTask = new EvaluationTask(evaluateView, appContext);
         evaluationTask.execute(evaluation);
     }
 }

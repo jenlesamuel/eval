@@ -1,4 +1,4 @@
-package com.jenle.interviewapp.sync;
+package com.jenle.interviewapp.evaluate.model;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.InterviewAppException;
+import com.jenle.interviewapp.QueueSingleton;
 import com.jenle.interviewapp.R;
 import com.jenle.interviewapp.Utils;
 import com.jenle.interviewapp.evaluate.model.Evaluation;

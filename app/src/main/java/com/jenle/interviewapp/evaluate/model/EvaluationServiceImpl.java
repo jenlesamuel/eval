@@ -68,12 +68,30 @@ public class EvaluationServiceImpl implements EvaluationService{
         record.put(Config.KEY_EDUCATIONAL_BACKGROUND, evaluation.getEducationalBackground());
         record.put(Config.KEY_LEADERSHIP, evaluation.getLeadership());
         record.put(Config.KEY_COMMENTS, evaluation.getComments());
-
+        record.put(Config.KEY_TOTAL, calculateTotal(evaluation));
         ArrayList<HashMap<String, Object>> records = new ArrayList<HashMap<String, Object>>();
         records.add(record);
 
         return new Utils().toJSONArray(records);
 
+    }
+
+    /**
+     * Calculates the total comtetencies in an evaluation
+     * @param evaluation
+     * @return int
+     */
+    public int calculateTotal(Evaluation evaluation){
+        int communication = evaluation.getCommunication();
+        int problemSolving =  evaluation.getProblemSolving();
+        int conflictResolution = evaluation.getConflictResolution();
+        int teamWork = evaluation.getTeamWork();
+        int workExperience =  evaluation.getWorkExperience();
+        int educationalBackground =  evaluation.getEducationalBackground();
+        int leadership =  evaluation.getLeadership();
+
+        return communication + problemSolving + conflictResolution + teamWork + workExperience
+                + educationalBackground + leadership;
     }
 
 }

@@ -19,7 +19,7 @@
         </activity>
 
         <service
-            android:name=".sync.EvaluationNetworkService"
+            android:name=".evaluate.model.EvaluationNetworkService"
             android:enabled="true"
             android:exported="false" />
 

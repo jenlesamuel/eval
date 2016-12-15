@@ -26,6 +26,7 @@ public final class Config {
     public static final String KEY_EDUCATIONAL_BACKGROUND = "educational_background";
     public static final String KEY_LEADERSHIP = "leadership";
     public static final String KEY_COMMENTS = "comments";
+    public static final String KEY_TOTAL = "total";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
     public static final int HTTP_200_OK = 200;

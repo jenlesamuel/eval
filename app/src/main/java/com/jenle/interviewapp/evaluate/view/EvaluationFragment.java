@@ -44,7 +44,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     private Button submit;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String TAG = "EVALUATIONFRAGMENT";
-    private Context context;
+    private Context appContext;
     private EvaluateContract.Presenter evaluationPresenter;
 
 
@@ -106,8 +106,8 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         
-        context = this.getContext();
-        evaluationPresenter = new EvaluationPresenter(this, context);
+        appContext = this.getActivity().getApplicationContext();
+        evaluationPresenter = new EvaluationPresenter(this, appContext);
 
     }
 
@@ -147,7 +147,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
 
     @Override
     public void showMessage(String message){
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show();
         return;
     }
 
@@ -161,22 +161,22 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         Utils utils = new Utils();
 
         String candidateName = candidateView.getText().toString();
-        String candidateLabel = utils.getStringFromResource(context, R.string.candidate_name);
+        String candidateLabel = utils.getStringFromResource(appContext, R.string.candidate_name);
         if (!utils.isValidName(candidateView, candidateLabel, candidateName)) valid = false;
 
         String jobTitle = jobView.getText().toString();
-        String jobLabel =  utils.getStringFromResource(context, R.string.job_title);
+        String jobLabel =  utils.getStringFromResource(appContext, R.string.job_title);
         if (!utils.isValidNonEmpty(jobView, jobLabel, jobTitle)) valid = false;
 
         String interviewerName = interviewerView.getText().toString();
-        String interviewerNameLabel = utils.getStringFromResource(context, R.string.interviewer_name);
+        String interviewerNameLabel = utils.getStringFromResource(appContext, R.string.interviewer_name);
         if (!utils.isValidName(interviewerView, interviewerNameLabel, interviewerName)) valid = false;
 
         String interviewDate = dateView.getText().toString();
         if (!utils.isValidDate(dateView, interviewDate)) valid = false;
 
         String comments = commentsView.getText().toString();
-        String commentsLabel =  utils.getStringFromResource(context, R.string.comments);
+        String commentsLabel =  utils.getStringFromResource(appContext, R.string.comments);
         if (!utils.isValidNonEmpty(commentsView, commentsLabel, comments)) valid = false;
 
 
@@ -223,7 +223,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
 
         if (!valid) { //validation failed
 
-            String validationError = utils.getStringFromResource(context, R.string.validation_error);
+            String validationError = utils.getStringFromResource(appContext, R.string.validation_error);
             showMessage(validationError);
 
             return;

@@ -1,8 +1,6 @@
 package com.jenle.interviewapp.login.presenter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.NetworkResponse;
@@ -14,8 +12,7 @@ import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.R;
 import com.jenle.interviewapp.Utils;
 import com.jenle.interviewapp.login.LoginContract;
-import com.jenle.interviewapp.login.model.LoginNetworkService;
-import com.jenle.interviewapp.sync.QueueSingleton;
+import com.jenle.interviewapp.QueueSingleton;
 
 import org.json.JSONObject;
 

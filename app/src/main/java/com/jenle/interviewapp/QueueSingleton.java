@@ -1,4 +1,4 @@
-package com.jenle.interviewapp.sync;
+package com.jenle.interviewapp;
 
 import android.content.Context;
 

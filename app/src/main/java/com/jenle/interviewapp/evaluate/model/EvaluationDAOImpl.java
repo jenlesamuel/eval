@@ -106,6 +106,8 @@ public class EvaluationDAOImpl implements EvaluationDAO{
             int educationalBackground = c.getInt(c.getColumnIndex(EvaluationContract.EDUCATIONAL_BACKGROUND));
             int leadership = c.getInt(c.getColumnIndex(EvaluationContract.LEADERSHIP));
             String comments = c.getString(c.getColumnIndex(EvaluationContract.COMMENTS));
+            int total = communication + problemSolving + conflictResolution + teamWork + workExperience
+                    + educationalBackground + leadership;
 
             HashMap<String, Object> record = new HashMap<String, Object>();
             record.put(Config.KEY_REMOTE_ID, id);
@@ -121,6 +123,7 @@ public class EvaluationDAOImpl implements EvaluationDAO{
             record.put(Config.KEY_EDUCATIONAL_BACKGROUND, Integer.valueOf(educationalBackground));
             record.put(Config.KEY_LEADERSHIP, Integer.valueOf(leadership));
             record.put(Config.KEY_COMMENTS, comments);
+            record.put(Config.KEY_TOTAL, total);
 
             records.add(record);
         }

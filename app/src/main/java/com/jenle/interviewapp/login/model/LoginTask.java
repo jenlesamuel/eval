@@ -3,15 +3,7 @@ package com.jenle.interviewapp.login.model;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.login.LoginContract;
-import com.jenle.interviewapp.sync.QueueSingleton;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
