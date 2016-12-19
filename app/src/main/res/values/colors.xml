@@ -8,5 +8,8 @@
     <color name="interviewTextColorPrimary">#FFFFFF</color>
     <color name='customGrey'>#CCC</color>
     <color name='white'>#FFF</color>
+    <color name='offWhite'>#f4f4f4</color>
     <color name='colorHint'>#B1BDD6</color>
+    <color name='evaluationWindowBg'>#EEEEEE</color>
+
 </resources>
