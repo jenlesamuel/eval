@@ -10,9 +10,9 @@ This repository contains a sample android interview evaluation application
 * Auto-sync evaluation record to remote server hosted at [https://eval-webapp.herokuapp.com] after saving locally to device
 * Manually sync records if auto-sync fails.
 
-**Features In View **
+**Features In View**
 * Optimize layout for tablets
 * Include interview candidate image in data saved
-* ...
+* et al
 
 
