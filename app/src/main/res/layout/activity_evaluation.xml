@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jenle.interviewapp.evaluate.view.EvaluationActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,13 +19,19 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:visibility="gone"
+        />
+
     <fragment
         android:name="com.jenle.interviewapp.evaluate.view.EvaluationFragment"
         android:id="@+id/evaluation_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-
 
 </LinearLayout>

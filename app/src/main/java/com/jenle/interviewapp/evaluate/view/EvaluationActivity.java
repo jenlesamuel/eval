@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.R;
@@ -15,7 +16,7 @@ import com.jenle.interviewapp.Utils;
 import com.jenle.interviewapp.login.view.LoginActivity;
 import com.jenle.interviewapp.evaluate.model.EvaluationNetworkService;
 
-public class EvaluationActivity extends AppCompatActivity {
+public class EvaluationActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

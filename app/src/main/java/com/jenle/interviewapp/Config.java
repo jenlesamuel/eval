@@ -5,9 +5,9 @@ package com.jenle.interviewapp;
  */
 
 public final class Config {
-    public static final String REMOTE_BASE_URL = "";
-    public static final String EVALUATION_PATH = "";
-    public static final String LOGIN_PATH = "";
+    public static final String REMOTE_BASE_URL = "https://eval-webapp.herokuapp.com/";
+    public static final String EVALUATION_PATH = "api/evaluations/";
+    public static final String LOGIN_PATH = "api/auth/login/";
     public static final String SOURCE = "source";
     public static final String BULK_SYNC = "bulk_sync";
     public static final String UNI_SYNC = "uni_sync";
@@ -28,8 +28,12 @@ public final class Config {
     public static final String KEY_COMMENTS = "comments";
     public static final String KEY_TOTAL = "total";
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";
     public static final int HTTP_200_OK = 200;
+    public static final int HTTP_201_CREATED = 201;
     public static final int HTTP_400_BAD_REQUEST = 400; // status code returned by remote API if login credentials is invalid
     public static final String RESTORE_STATE = "restore";
+    public static final String BROADCAST_IN_SYNC_ACTION = "com.jenle.interviewapp.BROADCAST"; // Intent action when local db is in sync \with remote db
+    public static final String SYNC_STATUS = "com.jenle.interviewapp.STATUS";
 }

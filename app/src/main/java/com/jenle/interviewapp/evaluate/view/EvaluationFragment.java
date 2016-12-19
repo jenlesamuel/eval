@@ -82,6 +82,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         contentView = (LinearLayout) view.findViewById(R.id.container);
 
         candidateView = (EditText) view.findViewById(R.id.candidate_name);
+        candidateView.clearFocus();
         candidateLabel = utils.getStringFromResource(appContext, R.string.candidate_name);
         candidateView.addTextChangedListener(new TextWatcher(){
             @Override
@@ -197,8 +198,22 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     }
 
     @Override
-    public void showMessage(String message){
+    public void showToast(String message){
         Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show();
+        return;
+    }
+
+    @Override
+    public void showErrorDialog(){
+        DialogFragment errorDialog = new ErrorDialog();
+        errorDialog.show(parentActivity.getSupportFragmentManager(), "error_dialog");
+        return;
+    }
+
+    public void showSuccessDialog(String title, String message){
+        DialogFragment successDialog = SuccessDialog.newInstance(title, message);
+        successDialog.setTargetFragment(EvaluationFragment.this, 0);
+        successDialog.show(parentActivity.getSupportFragmentManager(), "success_dialog");
         return;
     }
 
@@ -282,7 +297,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         if (!valid) { //validation failed
 
             String validationError = utils.getStringFromResource(appContext, R.string.validation_error);
-            showMessage(validationError);
+            showToast(validationError);
 
             return;
 
@@ -336,5 +351,28 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             radioGroup.getChildAt(i).setOnClickListener(listener);
         }
 
+    }
+
+    public void clearFields(){
+        // Set all view to their default state
+
+        candidateView.setText("");
+        jobView.setText("");
+        interviewerView.setText("");
+        dateView.setText("");
+        commentsView.setText("");
+
+        int count = contentView.getChildCount(); // Get count of all Views in layout
+
+        for (int i=0; i < count; i++) {
+
+            View view = contentView.getChildAt(i);
+
+            if (view instanceof RadioGroup) {
+
+                RadioGroup radioGroup = (RadioGroup) view;
+                radioGroup.clearCheck();
+            }
+        }
     }
 }

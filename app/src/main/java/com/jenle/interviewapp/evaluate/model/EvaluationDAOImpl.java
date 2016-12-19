@@ -72,7 +72,7 @@ public class EvaluationDAOImpl implements EvaluationDAO{
      * Returns all unsynced records in the local database.
      * @return ArrayList
      */
-    public ArrayList<HashMap<String, Object>> retrieveUnsynced(){
+    public ArrayList<HashMap<String, Object>> retrieveUnsynced(boolean persistConnection){
         String selection = EvaluationContract.STATUS + " = ?";
         String[] selectionArgs = {String.valueOf(0)};
         String[] projection = null;
@@ -129,7 +129,7 @@ public class EvaluationDAOImpl implements EvaluationDAO{
         }
 
         if(c != null) c.close();
-        if(db != null) db.close();
+        if(!persistConnection) if(db != null) db.close();
 
         return records;
     }

@@ -1,9 +1,11 @@
 package com.jenle.interviewapp.evaluate.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.jenle.interviewapp.Config;
 import com.jenle.interviewapp.Utils;
 import com.jenle.interviewapp.evaluate.EvaluateContract;
 
@@ -53,21 +55,23 @@ import com.jenle.interviewapp.evaluate.EvaluateContract;
         if (pk == -1) { // Error occured while saving evaluation record
             String evaluationError = new Utils().getEvaluationCreationError(appContext);
             evaluateView.closeProgressDialog();
-            evaluateView.showMessage(evaluationError);
+            evaluateView.showErrorDialog();
             return;
         }
 
         // Successfully saved evaluation record
         String evaluationSuccess = new Utils().getEvaluationCreationSuccess(appContext);
         evaluateView.closeProgressDialog();
-        evaluateView.showMessage(evaluationSuccess);
-        evaluateView.recreate();
+        evaluateView.showSuccessDialog(null, evaluationSuccess);
+
+
+        //evaluateView.recreate();
         //Save evaluation to remote server
-       /* Intent intent = new Intent(context, EvaluationNetworkService.class);
+        Intent intent = new Intent(appContext, EvaluationNetworkService.class);
         intent.putExtra(Config.ID, pk);
         intent.putExtra(Config.SOURCE, Config.UNI_SYNC);
         intent.putExtra(Config.PARAM, evaluation);
-        context.startService(intent); */
+        appContext.startService(intent);
 
        //((Fragment)evaluateView).getActivity().finish();
         return;

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,9 +23,11 @@ import com.jenle.interviewapp.evaluate.model.EvaluationServiceImpl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jenle Samuel on 12/9/16.
@@ -36,6 +40,7 @@ public class EvaluationNetworkService extends IntentService {
     private Context context;
     private EvaluationDAO evaluationDAO;
     private JSONArray param;
+    private int statusCode ;
 
     public EvaluationNetworkService(){
         super("EvaluationNetworkService");
@@ -54,8 +59,9 @@ public class EvaluationNetworkService extends IntentService {
             if (source.equals(Config.BULK_SYNC)) {
 
                 // Retrieve network call param from db if user initiated sync
-                ArrayList<HashMap<String, Object>> records = evaluationDAO.retrieveUnsynced();
+                ArrayList<HashMap<String, Object>> records = evaluationDAO.retrieveUnsynced(true);
                 param = utils.toJSONArray(records);
+                Log.d(TAG, param.toString());
 
             } else if (source.equals(Config.UNI_SYNC)){
 
@@ -64,6 +70,7 @@ public class EvaluationNetworkService extends IntentService {
                 if (id == 0) return;
                 Evaluation evaluation = (Evaluation) intent.getSerializableExtra(Config.PARAM);
                 param = new EvaluationServiceImpl().evaluationToJSONArray(evaluation, id);
+                Log.d(TAG, param.toString());
 
             }
 
@@ -77,21 +84,33 @@ public class EvaluationNetworkService extends IntentService {
                     try {
                         //Retrieve synced record ids from response
                         // CHECK FOR EXPIRED TOKEN RESPONSE
-                        int l = response.length();
-                        int[] syncedIds = new int[l];
-                        for (int i = 0; i < l; i++) {
-                            syncedIds[i] = response.getInt(i);
+                        if (statusCode == Config.HTTP_201_CREATED){
+                            int l = response.length();
+                            int[] syncedIds = new int[l];
+                            for (int i = 0; i < l; i++) {
+                                syncedIds[i] = response.getInt(i);
+                            }
+
+                            Log.d(TAG, response.toString());
+
+                            // Update sync status of synced records
+
+                            evaluationDAO.updateSyncedStatus(syncedIds);
+
+                            if (source.equals(Config.BULK_SYNC)) {
+
+                                // Only show sync status if sync was initiated by user
+                                String message = getResources().getString(R.string.sync_success);
+                                showSyncMessage(context, message);
+                            }
+                        } else {
+
+                            if (source.equals(Config.BULK_SYNC)){
+                                showSyncMessage(context, getResources().getString(R.string.sync_failed));
+                                Log.d(TAG, statusCode+" "+response.toString());
+                            }
                         }
 
-                        // Update sync status of synced records
-                        evaluationDAO.updateSyncedStatus(syncedIds);
-
-                        if (source.equals(Config.BULK_SYNC)) {
-
-                            // Only show sync status if sync was initiated by user
-                            String message = getResources().getString(R.string.sync_success);
-                            showSyncMessage(context, message);
-                        }
 
                     } catch (JSONException je) {
 
@@ -110,9 +129,33 @@ public class EvaluationNetworkService extends IntentService {
                     if (source.equals(Config.BULK_SYNC))
                         showSyncMessage(context, getResources().getString(R.string.sync_failed));
 
-                    Log.d(TAG, "ERROR OCCURED WHILE MAKING NETWORK CALL " + error.getMessage());
+                    Log.d(TAG, "ERROR OCCURED WHILE MAKING NETWORK CALL "+statusCode + error.getMessage()+error.toString());
                 }
-            });
+            }){
+
+
+                @Override
+                protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+                    statusCode = response.statusCode;
+                    return super.parseNetworkResponse(response);
+
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    String token = utils.getStringFromPreference(context, context.getString(R.string.token));
+                    String tokenHeader = "Token "+token;
+
+                    Log.d(TAG, token);
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Accept", "application/json");
+                    params.put("Authorization",tokenHeader);
+
+
+                    return params;
+                }
+            };
 
             // Make network call
             QueueSingleton mQueueSingleton = QueueSingleton.getInstance(context);

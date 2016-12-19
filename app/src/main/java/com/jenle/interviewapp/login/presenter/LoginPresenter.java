@@ -3,6 +3,7 @@ package com.jenle.interviewapp.login.presenter;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,6 +18,7 @@ import com.jenle.interviewapp.QueueSingleton;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -40,10 +42,11 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void login(Context context, String email, String password) {
 
         HashMap<String, String> credentials = new HashMap<String, String>();
-        credentials.put(Config.KEY_EMAIL, email);
+        credentials.put(Config.KEY_USERNAME, email);
         credentials.put(Config.KEY_PASSWORD, password);
 
         JSONObject param = new JSONObject(credentials);
+        Log.d(TAG, param.toString());
         makeRemoteCall(param);
 
     }
@@ -53,7 +56,8 @@ public class LoginPresenter implements LoginContract.Presenter {
         loginView.showProgress();
 
         // Create request
-        String url = Config.REMOTE_BASE_URL+Config.EVALUATION_PATH;
+        String url = Config.REMOTE_BASE_URL+Config.LOGIN_PATH;
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, param, new Response.Listener<JSONObject>(){
 
             @Override
@@ -61,13 +65,14 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                 loginView.closeProgress();
 
-                if (statusCode == Config.HTTP_200_OK) {
+                if (statusCode == Config.HTTP_201_CREATED) { // 201 is returned by th api upon successful authentication
 
                     //Get auth token
                     String token = response.optString("token");
 
                     // Save token in preference
                     String tokenKey = appContext.getString(R.string.token);
+                    Log.d(TAG, token);
                     new Utils().saveStringInPreference(appContext, tokenKey, token);
 
                     // redirect to evaluation activity
@@ -86,7 +91,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                     String loginError =  appContext.getString(R.string.login_error);
                     loginView.showMessage(appContext, loginError);
-                    Log.d(TAG, statusCode+ response.toString());
+                    Log.d(TAG, "OTHER ERROR"+statusCode+ response.toString());
 
                     return;
 
@@ -98,10 +103,11 @@ public class LoginPresenter implements LoginContract.Presenter {
             public void onErrorResponse(VolleyError error){
 
                 loginView.closeProgress();
-                loginView.redirectToEvaluation();
+                //loginView.redirectToEvaluation();
                 String loginError =  appContext.getString(R.string.login_error);
                 loginView.showMessage(appContext, loginError);
-                Log.d(TAG, statusCode+ error.getMessage());
+
+                Log.d(TAG, "VOLLEY ERROR"+statusCode+ error.getMessage());
 
                 return;
             }
@@ -113,6 +119,15 @@ public class LoginPresenter implements LoginContract.Presenter {
                 statusCode = response.statusCode;
                 return super.parseNetworkResponse(response);
 
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+
+                return params;
             }
         };
 

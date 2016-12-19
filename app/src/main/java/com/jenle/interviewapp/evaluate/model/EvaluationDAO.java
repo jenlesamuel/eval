@@ -12,6 +12,6 @@ import java.util.HashMap;
 
 public interface EvaluationDAO {
     public long insert(Evaluation evaluation);
-    public ArrayList<HashMap<String, Object>> retrieveUnsynced();
+    public ArrayList<HashMap<String, Object>> retrieveUnsynced(boolean persistConnection);
     public void updateSyncedStatus(int[] ids);
 }
