@@ -55,6 +55,10 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
     private String interviewerNameLabel;
     private String jobLabel;
     private String commentsLabel;
+    private TextWatcher candidateViewWatcher;
+    private TextWatcher jobViewWatcher;
+    private TextWatcher interviewerViewWatcher;
+    private TextWatcher commentsViewWatcher;
 
 
     public EvaluationFragment() {
@@ -82,9 +86,8 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         contentView = (LinearLayout) view.findViewById(R.id.container);
 
         candidateView = (EditText) view.findViewById(R.id.candidate_name);
-        candidateView.clearFocus();
         candidateLabel = utils.getStringFromResource(appContext, R.string.candidate_name);
-        candidateView.addTextChangedListener(new TextWatcher(){
+        candidateViewWatcher = new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             @Override
@@ -93,11 +96,15 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             public void afterTextChanged(Editable s){
                 utils.isValidName(candidateView, candidateLabel, s.toString());
             }
-        });
+        };
+        setFocusChangeListener(candidateView, candidateViewWatcher);
+
+
+
 
         jobView = (EditText) view.findViewById(R.id.job);
         jobLabel =  utils.getStringFromResource(appContext, R.string.job_title);
-        jobView.addTextChangedListener(new TextWatcher(){
+        jobViewWatcher = new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             @Override
@@ -106,12 +113,14 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             public void afterTextChanged(Editable s){
                 utils.isValidNonEmpty(jobView, jobLabel, s.toString());
             }
-        });
+        };
+
+        setFocusChangeListener(jobView, jobViewWatcher);
 
 
         interviewerView = (EditText) view.findViewById(R.id.interviewer_name);
         interviewerNameLabel = utils.getStringFromResource(appContext, R.string.interviewer_name);
-        interviewerView.addTextChangedListener(new TextWatcher(){
+        interviewerViewWatcher = new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             @Override
@@ -120,11 +129,13 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             public void afterTextChanged(Editable s){
                 utils.isValidName(interviewerView, interviewerNameLabel, s.toString());
             }
-        });
+        };
+        setFocusChangeListener(interviewerView, interviewerViewWatcher);
+
 
         commentsView = (EditText)view.findViewById(R.id.comments);
         commentsLabel =  utils.getStringFromResource(appContext, R.string.comments);
-        commentsView.addTextChangedListener(new TextWatcher(){
+        commentsViewWatcher = new TextWatcher(){
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             @Override
@@ -133,7 +144,9 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             public void afterTextChanged(Editable s){
                 utils.isValidNonEmpty(commentsView, commentsLabel, s.toString());
             }
-        });
+        };
+        setFocusChangeListener(commentsView, commentsViewWatcher);
+
 
 
         dateView = (EditText)view.findViewById(R.id.date);
@@ -142,6 +155,7 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
             @Override
             public void onClick(View view){
                 showDatePicker();
+
             }
         });
 
@@ -348,11 +362,20 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
 
     public void clearFields(){
         // Set all view to their default state
+        // Remove text changed listeners to prevent views from showing error when after clearing fields.
 
+        candidateView.removeTextChangedListener(candidateViewWatcher);
         candidateView.setText("");
+
+        jobView.removeTextChangedListener(jobViewWatcher);
         jobView.setText("");
+
+        interviewerView.removeTextChangedListener(interviewerViewWatcher);
         interviewerView.setText("");
+
         dateView.setText("");
+
+        commentsView.removeTextChangedListener(commentsViewWatcher);
         commentsView.setText("");
 
         int count = contentView.getChildCount(); // Get count of all Views in layout
@@ -367,5 +390,15 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
                 radioGroup.clearCheck();
             }
         }
+    }
+
+    public void setFocusChangeListener(final EditText mEditText, final TextWatcher watcher){
+
+       mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View view, boolean hasFocus){
+                if (hasFocus) mEditText.addTextChangedListener(watcher);
+            }
+        });
     }
 }
