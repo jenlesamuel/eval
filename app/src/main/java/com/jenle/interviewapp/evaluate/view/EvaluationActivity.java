@@ -1,6 +1,10 @@
 package com.jenle.interviewapp.evaluate.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +36,12 @@ public class EvaluationActivity extends AppCompatActivity{
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        IntentFilter inSyncFilter = new IntentFilter(Config.BROADCAST_IN_SYNC_ACTION);
+        InSyncReceiver mInsyncReceiver = new InSyncReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mInsyncReceiver, inSyncFilter
+        );
     }
 
     @Override
@@ -80,6 +90,21 @@ public class EvaluationActivity extends AppCompatActivity{
 
         super.onSaveInstanceState(savedInstanceState);
 
+    }
+
+    // Broadcast receiver for receiving update if local db is already in sync
+    // with remote db, when a sync action is initiated by the user
+    private class InSyncReceiver extends BroadcastReceiver {
+
+        private InSyncReceiver(){}
+
+        @Override
+        public void onReceive(Context context, Intent intent){
+            // No need to handle intent
+            // Just show message since the intent is only sent when db is already in sync
+
+            Toast.makeText(context, R.string.in_sync, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

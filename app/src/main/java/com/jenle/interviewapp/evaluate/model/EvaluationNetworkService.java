@@ -3,6 +3,7 @@ package com.jenle.interviewapp.evaluate.model;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -56,14 +57,21 @@ public class EvaluationNetworkService extends IntentService {
             context = getApplicationContext();
             evaluationDAO = utils.getEvaluationDAO(context);
 
-            if (source.equals(Config.BULK_SYNC)) {
+            if (source.equals(Config.BULK_SYNC)) { // Sync was initiated by user
 
                 // Retrieve network call param from db if user initiated sync
                 ArrayList<HashMap<String, Object>> records = evaluationDAO.retrieveUnsynced(true);
+
+                //Check if db is already in sync
+                if (records.isEmpty()) {
+                    sendInSyncBroadcast();
+                    return;
+                }
+
                 param = utils.toJSONArray(records);
                 Log.d(TAG, param.toString());
 
-            } else if (source.equals(Config.UNI_SYNC)){
+            } else if (source.equals(Config.UNI_SYNC)){ // implicit sync after a record is inserted into the db
 
                 // Retrieve network call param from intent
                 Long id = intent.getLongExtra(Config.ID, 0);
@@ -175,5 +183,14 @@ public class EvaluationNetworkService extends IntentService {
     public void showSyncMessage(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         return;
+    }
+
+    /**
+     * Broadcast sent to notify activity component that local db is already ion sync with remote db
+     *
+     */
+    public void sendInSyncBroadcast(){
+        Intent localIntent = new Intent(Config.BROADCAST_IN_SYNC_ACTION).putExtra(Config.SYNC_STATUS, Config.IN_SYNC);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 }

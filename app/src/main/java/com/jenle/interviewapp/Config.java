@@ -36,4 +36,5 @@ public final class Config {
     public static final String RESTORE_STATE = "restore";
     public static final String BROADCAST_IN_SYNC_ACTION = "com.jenle.interviewapp.BROADCAST"; // Intent action when local db is in sync \with remote db
     public static final String SYNC_STATUS = "com.jenle.interviewapp.STATUS";
+    public static final String IN_SYNC = "in_sync";
 }
