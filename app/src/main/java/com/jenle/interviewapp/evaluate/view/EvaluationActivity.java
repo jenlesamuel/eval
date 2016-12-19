@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.jenle.interviewapp.Config;
@@ -21,27 +23,31 @@ import com.jenle.interviewapp.login.view.LoginActivity;
 import com.jenle.interviewapp.evaluate.model.EvaluationNetworkService;
 
 public class EvaluationActivity extends AppCompatActivity{
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (savedInstanceState != null) {
-            // Don't restore state when Activity is recreated from fragment
-            boolean restoreState = savedInstanceState.getBoolean(Config.RESTORE_STATE, true);
-            if (!restoreState) savedInstanceState = null;
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evaluation);
+
+        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        IntentFilter inSyncFilter = new IntentFilter(Config.BROADCAST_IN_SYNC_ACTION);
-        InSyncReceiver mInsyncReceiver = new InSyncReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mInsyncReceiver, inSyncFilter
-        );
+        SyncReceiver mSyncReceiver = new SyncReceiver();
+        LocalBroadcastManager mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        // Register receiver for broadcasts when local db is already in sync with remote db
+        IntentFilter inSyncFilter = new IntentFilter(Config.ALREADY_IN_SYNC_ACTION);
+        mLocalBroadcastManager.registerReceiver(mSyncReceiver, inSyncFilter);
+
+        // Register receiver for broadcasts when sync is complete
+        IntentFilter syncCompleteFilter = new IntentFilter(Config.SYNC_COMPLETE);
+        mLocalBroadcastManager.registerReceiver(mSyncReceiver, syncCompleteFilter);
+
+
     }
 
     @Override
@@ -72,6 +78,7 @@ public class EvaluationActivity extends AppCompatActivity{
         Intent intent = new Intent(this, EvaluationNetworkService.class);
         intent.putExtra(Config.SOURCE, Config.BULK_SYNC);
         startService(intent);
+        showSyncProgress(true);
     }
 
     public void logout() {
@@ -81,29 +88,44 @@ public class EvaluationActivity extends AppCompatActivity{
         finish();
     }
 
+    /**
+     * Shows or hides a progress bar
+     * @param bool
+     */
+    public void showSyncProgress(boolean bool) {
+        if(bool){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            if (progressBar != null){
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+    }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        // Save flag to not restore state if activity is recreated from fragment
-        boolean restoreState = getIntent().getBooleanExtra(Config.RESTORE_STATE, true);
-        savedInstanceState.putBoolean(Config.RESTORE_STATE, restoreState);
-
-        super.onSaveInstanceState(savedInstanceState);
-
+    public void showToast(int messageId){
+        Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
     }
 
     // Broadcast receiver for receiving update if local db is already in sync
     // with remote db, when a sync action is initiated by the user
-    private class InSyncReceiver extends BroadcastReceiver {
+    private class SyncReceiver extends BroadcastReceiver {
 
-        private InSyncReceiver(){}
+        private SyncReceiver(){}
 
         @Override
         public void onReceive(Context context, Intent intent){
-            // No need to handle intent
-            // Just show message since the intent is only sent when db is already in sync
 
-            Toast.makeText(context, R.string.in_sync, Toast.LENGTH_SHORT).show();
+            String action = intent.getAction();
+
+            if (action.equals(Config.ALREADY_IN_SYNC_ACTION)){
+
+                showSyncProgress(false);
+                showToast(R.string.in_sync);
+            }else if (action.equals(Config.SYNC_COMPLETE)){
+
+                showSyncProgress(false);
+            }
+
         }
     }
 

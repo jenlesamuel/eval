@@ -64,7 +64,7 @@ public class EvaluationNetworkService extends IntentService {
 
                 //Check if db is already in sync
                 if (records.isEmpty()) {
-                    sendInSyncBroadcast();
+                    sendSyncStatusBroadcast(Config.ALREADY_IN_SYNC_ACTION);
                     return;
                 }
 
@@ -89,7 +89,10 @@ public class EvaluationNetworkService extends IntentService {
                 @Override
                 public void onResponse(JSONArray response) {
 
+                    sendSyncStatusBroadcast(Config.SYNC_COMPLETE);// Notify component sync is complete
+
                     try {
+
                         //Retrieve synced record ids from response
                         // CHECK FOR EXPIRED TOKEN RESPONSE
                         if (statusCode == Config.HTTP_201_CREATED){
@@ -133,6 +136,8 @@ public class EvaluationNetworkService extends IntentService {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
+
+                    sendSyncStatusBroadcast(Config.SYNC_COMPLETE);// Notify component sync is complete
 
                     if (source.equals(Config.BULK_SYNC))
                         showSyncMessage(context, getResources().getString(R.string.sync_failed));
@@ -189,8 +194,9 @@ public class EvaluationNetworkService extends IntentService {
      * Broadcast sent to notify activity component that local db is already ion sync with remote db
      *
      */
-    public void sendInSyncBroadcast(){
-        Intent localIntent = new Intent(Config.BROADCAST_IN_SYNC_ACTION).putExtra(Config.SYNC_STATUS, Config.IN_SYNC);
+    public void sendSyncStatusBroadcast(String action){
+        Intent localIntent = new Intent(action);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+
     }
 }

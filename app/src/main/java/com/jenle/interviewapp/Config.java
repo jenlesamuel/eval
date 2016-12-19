@@ -34,7 +34,7 @@ public final class Config {
     public static final int HTTP_201_CREATED = 201;
     public static final int HTTP_400_BAD_REQUEST = 400; // status code returned by remote API if login credentials is invalid
     public static final String RESTORE_STATE = "restore";
-    public static final String BROADCAST_IN_SYNC_ACTION = "com.jenle.interviewapp.BROADCAST"; // Intent action when local db is in sync \with remote db
-    public static final String SYNC_STATUS = "com.jenle.interviewapp.STATUS";
-    public static final String IN_SYNC = "in_sync";
+    public static final String ALREADY_IN_SYNC_ACTION = "com.jenle.interviewapp.IN_SYNC_ACTION"; // Intent action when local db is in sync with remote db
+    public static final String SYNC_COMPLETE = "com.jenle.interviewapp.SYNC_ACTION"; // Intent action when sync is complete
+
 }

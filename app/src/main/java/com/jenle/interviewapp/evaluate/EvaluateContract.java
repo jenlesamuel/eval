@@ -18,7 +18,6 @@ public interface EvaluateContract {
         void showToast(String message);
         void showErrorDialog();
         void showSuccessDialog(String title, String message);
-        void recreate();
     }
 
     interface Presenter {

@@ -217,13 +217,6 @@ public class EvaluationFragment extends Fragment implements EvaluateContract.Vie
         return;
     }
 
-    @Override
-    public void recreate(){
-        parentActivity.getIntent().putExtra(Config.RESTORE_STATE, false); // Set to make parent activity not repopulate views when recreating
-        getActivity().recreate();
-    }
-
-
     /**
      * Handler evaluation submission
      */
