@@ -84,7 +84,7 @@ public class Utils {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         boolean outcome = matcher.matches(); */
-        boolean outcome = (input.trim().length() >= 3);
+        boolean outcome = (input.trim().length() > 0);
         if (!outcome) view.setError("Enter a valid "+fieldName);
 
         return outcome;
@@ -107,7 +107,7 @@ public class Utils {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         boolean outcome = matcher.matches(); */
-        boolean outcome = (input.trim().length() >= 3);
+        boolean outcome = (input.trim().length() > 0);
         if (!outcome) view.setError("Enter valid "+fieldName);
         return outcome;
     }
